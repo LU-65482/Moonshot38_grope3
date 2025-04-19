@@ -52,7 +52,7 @@ class SafetySystem:
             base_url=os.getenv("OPENAI_BASEURL2"),  # 填写 DashScope SDK 的 base_url
         )
         self.audio = Audio()
-        self.audio.play('/root/work/test.wav')
+        # self.audio.play('/root/work/test.wav')
         
         # 系统参数
         self.base_z = 9.81
@@ -65,6 +65,8 @@ class SafetySystem:
         
         # 启动 Web 服务
         self._start_web_service()
+        
+        self._start_voice_service()
     
     def _start_web_service(self):
         """启动 Web 服务"""
