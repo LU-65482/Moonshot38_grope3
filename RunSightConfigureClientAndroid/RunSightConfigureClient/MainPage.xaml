@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RunSightConfigureClient.MainPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:maui="clr-namespace:Camera.MAUI;assembly=Camera.MAUI">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="16, 8"
+            Spacing="25">
+            <Label
+                Text="欢迎"
+                Style="{StaticResource Headline}"
+                HorizontalOptions="Start"
+                SemanticProperties.HeadingLevel="Level1" />
+            <Grid ColumnDefinitions="*, *">
+                <Button Text="配对新设备"/>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
