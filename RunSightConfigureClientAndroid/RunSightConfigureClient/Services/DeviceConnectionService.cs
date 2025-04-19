@@ -52,14 +52,35 @@ public class DeviceConnectionService(ILogger<DeviceConnectionService> logger)
         try
         {
             var httpClient = new HttpClient();
+            
+            // 创建 JsonSerializerOptions 以确保属性名称与服务器端匹配
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = null // 使用原始属性名称，不进行命名转换
+            };
+            
+            // 记录请求内容
+            var requestJson = JsonSerializer.Serialize(CurrentDeviceConfigure, options);
+            Logger.LogInformation("发送配置请求: {}", requestJson);
+            
             var r = await httpClient.PostAsync(new UriBuilder(BaseUrl)
             {
                 Path = "configure"
             }.Uri, JsonContent.Create(CurrentDeviceConfigure, new MediaTypeHeaderValue("application/json")
             {
                 CharSet = "utf-8"
-            }));
-            Logger.LogInformation("response: {}", await r.Content.ReadAsStringAsync());
+            }, options));
+            
+            // 记录响应状态码和内容
+            var responseContent = await r.Content.ReadAsStringAsync();
+            Logger.LogInformation("响应状态码: {}, 响应内容: {}", r.StatusCode, responseContent);
+            
+            if (!r.IsSuccessStatusCode)
+            {
+                Logger.LogError("请求失败: {}", responseContent);
+                throw new Exception($"请求失败: {r.StatusCode} - {responseContent}");
+            }
+            
             r.EnsureSuccessStatusCode();
         }
         catch (Exception e)
