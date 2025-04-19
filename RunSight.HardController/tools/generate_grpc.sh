@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 设置目录
-PROTOBUF_DIR="../RunSightConfigureClientAndroid/RunSight.Shared/"
+PROTOBUF_DIR="../RunSightConfigureClientAndroid/RunSight.Shared/Protobuf/"
 OUTPUT_DIR="../grpc_gen"
 
 # 确保输出目录存在
@@ -13,7 +13,7 @@ for proto_file in $(find $PROTOBUF_DIR -name "*.proto"); do
     
     # 生成 Python 代码
     python -m grpc_tools.protoc \
-        -I $PROTOBUF_DIR \
+        -I $PROTOBUF_DIR/.. \
         --python_out=$OUTPUT_DIR \
         --pyi_out=$OUTPUT_DIR \
         --grpc_python_out=$OUTPUT_DIR \
