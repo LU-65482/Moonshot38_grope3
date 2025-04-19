@@ -3,7 +3,7 @@ import time
 import threading
 from pinpong.board import Board, Pin
 from pinpong.extension.unihiker import accelerometer
-from grpc_gen.configure_service import serve as serve_grpc
+from grpc_gen.Protobuf.Services.ConfigureService_pb2_grpc import ConfigureServiceServicer
 
 # 初始化开发板
 Board().begin()

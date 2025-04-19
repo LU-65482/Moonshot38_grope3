@@ -56,4 +56,4 @@ humanfriendly==10.0
 hyperframe==5.2.0
 hyperlink
 grpcio
-grpc_tools
+grpcio_tools

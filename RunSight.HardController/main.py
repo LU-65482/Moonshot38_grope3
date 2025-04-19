@@ -8,7 +8,7 @@ from pinpong.extension.unihiker import accelerometer
 
 # 添加当前目录到 Python 路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from grpc_gen.configure_service import serve as serve_grpc
+from grpc.configure_service import serve as serve_grpc
 
 # 初始化开发板
 Board().begin()
