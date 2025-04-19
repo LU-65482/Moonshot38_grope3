@@ -68,4 +68,5 @@ def work():
                         blocksize=FRAME_SIZE,
                         dtype='float32',
                         callback=callback):
-        ...
+        while True:
+            ...
