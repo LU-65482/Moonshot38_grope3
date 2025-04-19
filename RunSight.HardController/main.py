@@ -43,9 +43,13 @@ class SafetySystem:
         self.buzzer = Pin(BUZZER_PIN, Pin.OUT)
         self.status_led = Pin(STATUS_LED, Pin.OUT)
         
-        self.ai = openai.OpenAI(
-            api_key=os.getenv("OPENAI_KEY"),  # 如果您没有配置环境变量，请用百炼 API Key 将本行替换为：api_key="sk-xxx"
-            base_url=os.getenv("OPENAI_BASEURL"),  # 填写 DashScope SDK 的 base_url
+        self.ai1 = openai.OpenAI(
+            api_key=os.getenv("OPENAI_KEY1"),  # 如果您没有配置环境变量，请用百炼 API Key 将本行替换为：api_key="sk-xxx"
+            base_url=os.getenv("OPENAI_BASEURL1"),  # 填写 DashScope SDK 的 base_url
+        )
+        self.ai2 = openai.OpenAI(
+            api_key=os.getenv("OPENAI_KEY2"),  # 如果您没有配置环境变量，请用百炼 API Key 将本行替换为：api_key="sk-xxx"
+            base_url=os.getenv("OPENAI_BASEURL2"),  # 填写 DashScope SDK 的 base_url
         )
         self.audio = Audio()
         self.audio.play('/root/work/test.wav')
@@ -146,14 +150,14 @@ class SafetySystem:
             
     def on_speech_captured(self, filename: str): 
         with open(filename, "rb") as f:
-            resultInput = self.ai.audio.transcribe(
-                model="whisper-1",
+            resultInput = self.ai1.audio.transcribe(
+                model="Systran/faster-whisper-large-v3",
                 file=f,
                 response_format="text",
                 language="zh"
             )
         print('>', resultInput)
-        res = self.ai.chat.completions.create(
+        res = self.ai2.chat.completions.create(
             model=OPENAI_MODEL,
             messages=[
                 {"role": "system", "content": "你是一个中文客服助理。"},
