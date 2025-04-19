@@ -57,3 +57,4 @@ hyperframe==5.2.0
 hyperlink
 grpcio
 grpcio_tools
+fastapi

@@ -48,7 +48,7 @@ public partial class PairNewDevicePage : ContentPage
     {
         try
         {
-            DeviceConnectionService.ConnectToNewDevice(ViewModel.ConnectionInfo);
+            await DeviceConnectionService.ConnectToNewDevice(ViewModel.ConnectionInfo);
             await DisplayAlert("成功", "成功连接到设备", "确定");
         }
         catch (Exception exception)

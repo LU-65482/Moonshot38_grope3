@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using RunSightConfigureClient.Models;
@@ -8,47 +9,39 @@ public class DeviceConnectionService(ILogger<DeviceConnectionService> logger)
 {
     public ILogger<DeviceConnectionService> Logger { get; } = logger;
     
-    public Channel? CurrentGrpcChannel { get; private set; }
-    
     public DeviceConnectionInfo? CurrentConnectedDevice { get; private set; }
 
-    public void ConnectToNewDevice(DeviceConnectionInfo info)
-    {
-        if (CurrentConnectedDevice != null)
-        {
-            DisconnectFromCurrentDevice();
-        }
+    public DeviceConfigure CurrentDeviceConfigure { get; set; } = new();
 
-        CurrentConnectedDevice = info;
-        
+    public Uri? BaseUrl { get; private set; } 
+    
+    public async Task ConnectToNewDevice(DeviceConnectionInfo info)
+    {
         try
         {
-            CurrentGrpcChannel = new Channel(info.DeviceAddress, info.DevicePort, ChannelCredentials.Insecure);
-            CurrentGrpcChannel.ConnectAsync().Wait();
-            Logger.LogInformation($"Connected to device at {info.DeviceAddress}:{info.DevicePort}");
+            var uri = new UriBuilder()
+            {
+                Host = info.DeviceAddress,
+                Port = info.DevicePort,
+                Scheme = "http"
+            }.Uri;
+            BaseUrl = uri;
+            var httpClient = new HttpClient();
+            var json = await httpClient.GetAsync(new UriBuilder(uri)
+            {
+                Path = "configure"
+            }.Uri);
+            CurrentDeviceConfigure = JsonSerializer.Deserialize<DeviceConfigure>(await json.Content.ReadAsStringAsync())!;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Logger.LogError(ex, "Failed to connect to device");
+            Logger.LogError(e, "无法连接到设备");
             throw;
         }
     }
 
     private void DisconnectFromCurrentDevice()
     {
-        if (CurrentGrpcChannel != null)
-        {
-            try
-            {
-                CurrentGrpcChannel.ShutdownAsync().Wait();
-                Logger.LogInformation($"Disconnected from device at {CurrentConnectedDevice.DeviceAddress}:{CurrentConnectedDevice.DevicePort}");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Failed to disconnect from device");
-            }
-        }
-
         CurrentConnectedDevice = null;
     }
 }
