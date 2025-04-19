@@ -11,7 +11,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 sys.path.append(os.path.join(current_dir, "grpc_gen"))
 
-from grpc.configure_service import serve as serve_grpc
+from grpc_impl.configure_service import serve as serve_grpc
 
 # 初始化开发板
 Board().begin()
