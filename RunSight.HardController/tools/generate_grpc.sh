@@ -2,8 +2,9 @@
 
 # 获取脚本所在目录的绝对路径
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROTOBUF_DIR="$(cd "$SCRIPT_DIR/../../RunSightConfigureClientAndroid/RunSight.Shared/Protobuf" && pwd)"
+PROTOBUF_DIR="$(cd "$SCRIPT_DIR/../../RunSightConfigureClientAndroid/RunSight.Shared/" && pwd)"
 
+echo $PROTOBUF_DIR
 # 设置目录
 OUTPUT_DIR="../grpc_gen"
 
@@ -11,12 +12,12 @@ OUTPUT_DIR="../grpc_gen"
 mkdir -p $OUTPUT_DIR
 
 # 遍历所有 .proto 文件
-for proto_file in $(find $PROTOBUF_DIR -name "*.proto"); do
+for proto_file in $(find $PROTOBUF_DIR/Protobuf/ -name "*.proto"); do
     echo "正在处理: $proto_file"
     
     # 生成 Python 代码
     python -m grpc_tools.protoc \
-        -I $PROTOBUF_DIR/.. \
+        -I $PROTOBUF_DIR \
         --python_out=$OUTPUT_DIR \
         --pyi_out=$OUTPUT_DIR \
         --grpc_python_out=$OUTPUT_DIR \
