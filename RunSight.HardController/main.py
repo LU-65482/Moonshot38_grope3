@@ -6,12 +6,11 @@ import sys
 from pinpong.board import Board, Pin
 from pinpong.extension.unihiker import accelerometer
 
-# 添加当前目录和 grpc_gen 目录到 Python 路径
+# 添加当前目录到 Python 路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
-sys.path.append(os.path.join(current_dir, "grpc_gen"))
 
-from grpc_impl.configure_service import serve as serve_grpc
+from web import start_server
 
 # 初始化开发板
 Board().begin()
@@ -48,15 +47,15 @@ class SafetySystem:
         self._simple_calibrate()
         self._hardware_test()
         
-        # 启动 gRPC 服务
-        self._start_grpc_service()
+        # 启动 Web 服务
+        self._start_web_service()
     
-    def _start_grpc_service(self):
-        """启动 gRPC 服务"""
-        print("[系统] 正在启动 gRPC 服务...")
-        grpc_thread = threading.Thread(target=serve_grpc, daemon=True)
-        grpc_thread.start()
-        print("[系统] gRPC 服务已启动")
+    def _start_web_service(self):
+        """启动 Web 服务"""
+        print("[系统] 正在启动 Web 服务...")
+        web_thread = threading.Thread(target=start_server, daemon=True)
+        web_thread.start()
+        print("[系统] Web 服务已启动")
     
     def _simple_calibrate(self):
         """3 秒快速校准"""

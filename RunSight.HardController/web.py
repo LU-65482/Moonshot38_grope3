@@ -3,7 +3,10 @@ import time
 import threading
 from pinpong.board import Board, Pin
 from pinpong.extension.unihiker import accelerometer
-from grpc_gen.Protobuf.Services.ConfigureService_pb2_grpc import ConfigureServiceServicer
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import uvicorn
+from typing import Optional
 
 # 初始化开发板
 Board().begin()
@@ -22,6 +25,51 @@ DEBOUNCE_TIME = 2.0      # 触发冷却时间
 #BUFFER_SIZE5 ~ 10 值越大，抗干扰能力越强
 #DEBOUNCE_TIME1.5 ~ 3.0 值越大，误报率越低
 
+# 配置模型
+class Configure(BaseModel):
+    SpeedThreshold: float
+    WifiSSID: Optional[str] = None
+    WifiPassword: Optional[str] = None
+
+# 响应模型
+class Response(BaseModel):
+    RetCode: int  # 0: 成功，1: 失败
+    Message: str
+
+# 创建 FastAPI 应用
+app = FastAPI(title="RunSight 硬件控制器 API")
+
+# 全局配置
+current_config = Configure(
+    SpeedThreshold=-5.5,
+    WifiSSID="",
+    WifiPassword=""
+)
+
+@app.get("/configure", response_model=Configure)
+async def get_configure():
+    """获取当前配置"""
+    return current_config
+
+@app.post("/configure", response_model=Response)
+async def update_configure(configure: Configure):
+    """更新配置"""
+    try:
+        # 更新配置
+        global current_config
+        current_config = configure
+        
+        # 返回成功响应
+        return Response(
+            RetCode=0,
+            Message="配置更新成功"
+        )
+    except Exception as e:
+        # 返回失败响应
+        return Response(
+            RetCode=1,
+            Message=f"配置更新失败：{str(e)}"
+        )
 
 class SafetySystem:
     def __init__(self):
@@ -123,6 +171,11 @@ class SafetySystem:
         self.status_led.write_digital(0)
         print("\n[系统] 安全关闭完成")
 
+def start_server(host: str = "0.0.0.0", port: int = 8000):
+    """启动 FastAPI 服务器"""
+    uvicorn.run(app, host=host, port=port)
+
 if __name__ == "__main__":
     system = SafetySystem()
     system.monitor_loop()
+    start_server()

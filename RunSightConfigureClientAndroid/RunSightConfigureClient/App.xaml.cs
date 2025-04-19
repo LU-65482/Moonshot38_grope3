@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using RunSightConfigureClient.Services;
 
 namespace RunSightConfigureClient;
 
@@ -6,7 +7,7 @@ public partial class App : Application
 {
     public static IHost? Host { get; private set; }
 
-    public T GetService<T>() where T : class
+    public static T GetService<T>() where T : class
     {
         var s = Host?.Services.GetRequiredService<T>();
         return s ?? throw new InvalidOperationException();
@@ -24,7 +25,7 @@ public partial class App : Application
         Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                
+                services.AddSingleton<DeviceConnectionService>();
             })
             .Build();
     }
