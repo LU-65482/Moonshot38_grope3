@@ -7,14 +7,17 @@
     xmlns:views="clr-namespace:RunSightConfigureClient.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="RunSightConfigureClient">
-
-    <ShellContent
-        Title="首页"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-    <ShellContent
-        Title="配对新设备"
-        ContentTemplate="{DataTemplate views:PairNewDevicePage}"
-        Route="PairNew" />
+    
+    <Tab >
+        <ShellContent
+            Title="首页"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+        <ShellContent
+            Title="连接"
+            ContentTemplate="{DataTemplate views:PairNewDevicePage}"
+            Route="PairNew" />
+    </Tab>
+    
 
 </Shell>

@@ -9,14 +9,10 @@
         <VerticalStackLayout
             Padding="16, 8"
             Spacing="25">
-            <Label
-                Text="欢迎"
-                Style="{StaticResource Headline}"
-                HorizontalOptions="Start"
-                SemanticProperties.HeadingLevel="Level1" />
-            <Grid ColumnDefinitions="*, *">
-                <Button Text="配对新设备" Clicked="ButtonPairNew_OnClicked"/>
-            </Grid>
+            <Label Text="加速度阈值"/>
+            <Editor Text="{Binding DeviceConnectionService.CurrentDeviceConfigure.SpeedThreshold}" />
+            
+            <Button Text="保存" Clicked="ButtonSave_OnClicked"/>
         </VerticalStackLayout>
     </ScrollView>
 

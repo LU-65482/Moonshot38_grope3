@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
@@ -40,8 +42,30 @@ public class DeviceConnectionService(ILogger<DeviceConnectionService> logger)
         }
     }
 
-    private void DisconnectFromCurrentDevice()
+    public void DisconnectFromCurrentDevice()
     {
         CurrentConnectedDevice = null;
+    }
+    
+    public async Task UploadSettings()
+    {
+        try
+        {
+            var httpClient = new HttpClient();
+            var r = await httpClient.PostAsync(new UriBuilder(BaseUrl)
+            {
+                Path = "configure"
+            }.Uri, JsonContent.Create(CurrentDeviceConfigure, new MediaTypeHeaderValue("application/json")
+            {
+                CharSet = "utf-8"
+            }));
+            Logger.LogInformation("response: {}", await r.Content.ReadAsStringAsync());
+            r.EnsureSuccessStatusCode();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "无法保存配置");
+            throw;
+        }
     }
 }
