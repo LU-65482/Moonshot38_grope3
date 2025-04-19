@@ -6,5 +6,5 @@ import "Protobuf/Requests/ConfigureUpdateReq.proto";
 import "Protobuf/Responses/ConfigureUpdateRsp.proto";
 
 service ConfigureService {
-  rpc UpdateConfigure (ConfigureUpdateReq) returns (ConfigureUpdateRsp);
+  rpc UpdateConfigure (Requests.ConfigureUpdateReq) returns (Responses.ConfigureUpdateRsp);
 }
