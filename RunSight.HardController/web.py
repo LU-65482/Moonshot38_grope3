@@ -53,3 +53,6 @@ async def update_configure(configure: Configure):
             Message=f"配置更新失败：{str(e)}"
         )
 
+def start_server(host: str = "0.0.0.0", port: int = 8000):
+    """启动 FastAPI 服务器"""
+    uvicorn.run(app, host=host, port=port)
