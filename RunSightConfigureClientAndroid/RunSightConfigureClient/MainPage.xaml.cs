@@ -4,7 +4,7 @@ namespace RunSightConfigureClient;
 
 public partial class MainPage : ContentPage
 {
-    private DeviceConnectionService DeviceConnectionService { get; } = App.GetService<DeviceConnectionService>();
+    public DeviceConnectionService DeviceConnectionService { get; } = App.GetService<DeviceConnectionService>();
 
     public MainPage()
     {

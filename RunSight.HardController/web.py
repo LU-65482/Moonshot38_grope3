@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 from typing import Optional
+import os
 
 
 # 配置模型
@@ -49,7 +50,10 @@ async def update_configure(configure: Configure):
         
         # 更新配置
         global current_config
+        prev_config = current_config
         current_config = configure
+        if prev_config.WifiSSID != current_config.WifiSSID or prev_config.WifiPassword != current_config.WifiPassword:
+            update_wifi()
         
         # 返回成功响应
         return Response(
@@ -71,3 +75,9 @@ async def update_configure(configure: Configure):
 def start_server(host: str = "0.0.0.0", port: int = 8000):
     """启动 FastAPI 服务器"""
     uvicorn.run(app, host=host, port=port)
+    
+def update_wifi():
+    os.system("nmcli connection modify wifi 802-11-wireless-security.leap-password \"{}\"".format(current_config.WifiPassword))
+    os.system("nmcli connection modify wifi 802-11-wireless.ssid \"{}\"".format(current_config.WifiSSID))
+    os.system("nmcli connection down wifi")
+    os.system("nmcli connection up wifi")

@@ -10,7 +10,7 @@ from pinpong.extension.unihiker import accelerometer
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
-from web import start_server
+from web import start_server, current_config
 
 # 初始化开发板
 Board().begin()
@@ -105,6 +105,7 @@ class SafetySystem:
         print("[系统] 安全监控已启动")
         try:
             while True:
+                Z_THRESHOLD = current_config.SpeedThreshold
                 # 读取并处理数据
                 current_z = self._safe_get_z()
                 self.buffer = (self.buffer + [current_z])[-BUFFER_SIZE:]

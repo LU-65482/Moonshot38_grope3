@@ -3,15 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RunSightConfigureClient.MainPage"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:maui="clr-namespace:Camera.MAUI;assembly=Camera.MAUI">
+             xmlns:maui="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             x:Name="mainPageRoot"
+             BindingContext="{x:Reference mainPageRoot}">
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="16, 8"
-            Spacing="25">
-            <Label Text="加速度阈值"/>
-            <Editor Text="{Binding DeviceConnectionService.CurrentDeviceConfigure.SpeedThreshold}" />
-            
+            Padding="16, 8">
+            <Label Text="加速度阈值" />
+            <Editor Text="{Binding DeviceConnectionService.CurrentDeviceConfigure.SpeedThreshold}" 
+                    Margin="0, 0, 0, 6"/>
+            <Label Text="WIFI SSID" />
+            <Editor Text="{Binding DeviceConnectionService.CurrentDeviceConfigure.WifiSSID}" 
+                    Margin="0, 0, 0, 6"/>
+            <Label Text="WIFI 密码" />
+            <Editor Text="{Binding DeviceConnectionService.CurrentDeviceConfigure.WifiPassword}" 
+                    Margin="0, 0, 0, 6"/>
             <Button Text="保存" Clicked="ButtonSave_OnClicked"/>
         </VerticalStackLayout>
     </ScrollView>
