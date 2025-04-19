@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# 获取脚本所在目录的绝对路径
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROTOBUF_DIR="$(cd "$SCRIPT_DIR/../../RunSightConfigureClientAndroid/RunSight.Shared/Protobuf" && pwd)"
+
 # 设置目录
-PROTOBUF_DIR="../RunSightConfigureClientAndroid/RunSight.Shared/Protobuf/"
 OUTPUT_DIR="../grpc_gen"
 
 # 确保输出目录存在
