@@ -58,3 +58,7 @@ hyperlink
 grpcio
 grpcio_tools
 fastapi
+webrtcvad
+sounddevice
+openai==1.53.0
+requests
