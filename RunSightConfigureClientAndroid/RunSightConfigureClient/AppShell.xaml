@@ -4,12 +4,17 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:RunSightConfigureClient"
+    xmlns:views="clr-namespace:RunSightConfigureClient.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="RunSightConfigureClient">
 
     <ShellContent
-        Title="RunSight APP"
+        Title="首页"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+    <ShellContent
+        Title="配对新设备"
+        ContentTemplate="{DataTemplate views:PairNewDevicePage}"
+        Route="PairNew" />
 
 </Shell>

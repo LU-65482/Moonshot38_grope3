@@ -15,7 +15,7 @@
                 HorizontalOptions="Start"
                 SemanticProperties.HeadingLevel="Level1" />
             <Grid ColumnDefinitions="*, *">
-                <Button Text="配对新设备"/>
+                <Button Text="配对新设备" Clicked="ButtonPairNew_OnClicked"/>
             </Grid>
         </VerticalStackLayout>
     </ScrollView>

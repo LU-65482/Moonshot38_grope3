@@ -13,4 +13,10 @@ public partial class MainPage : ContentPage
     {
         
     }
+
+    private void ButtonPairNew_OnClicked(object? sender, EventArgs e)
+    {
+        // Navigate to PairNewDevicePage
+        Shell.Current.GoToAsync("//PairNew");
+    }
 }
