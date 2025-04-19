@@ -1,0 +1,16 @@
+syntax = "proto3";
+package RunSight.Shared.Protobuf.Models;
+option csharp_namespace = "RunSight.Shared.Protobuf.Models";
+
+message Configure {
+    // threholds
+    float SpeedThreshold = 1;
+    // network
+    string WifiSSID = 2;
+    string WifiPassword = 3;
+    string ServerAddress = 4;
+    int32 ServerPort = 5;
+    // account
+    string UserId = 6;
+    string AccessToken = 7;
+}

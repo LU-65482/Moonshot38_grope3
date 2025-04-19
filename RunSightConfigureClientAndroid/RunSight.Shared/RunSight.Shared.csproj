@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" Version="3.27.0-rc1" />
+        <PackageReference Include="Grpc" Version="2.46.6" />
+        <PackageReference Include="Grpc.Tools" Version="2.62.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="Protobuf\Services\*.proto" />
+        <Protobuf Include="Protobuf\Responses\*.proto" />
+        <Protobuf Include="Protobuf\Requests\*.proto" />
+        <Protobuf Include="Protobuf\Enums\*.proto" />
+        <Protobuf Include="Protobuf\Models\*.proto" />
+    </ItemGroup>
+</Project>

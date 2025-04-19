@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import time
+import threading
 from pinpong.board import Board, Pin
 from pinpong.extension.unihiker import accelerometer
+from RunSight.HardController.grpc_gen.configure_service import serve as serve_grpc
 
 # 初始化开发板
 Board().begin()
@@ -37,6 +39,16 @@ class SafetySystem:
         # 启动初始化
         self._simple_calibrate()
         self._hardware_test()
+        
+        # 启动 gRPC 服务
+        self._start_grpc_service()
+    
+    def _start_grpc_service(self):
+        """启动 gRPC 服务"""
+        print("[系统] 正在启动 gRPC 服务...")
+        grpc_thread = threading.Thread(target=serve_grpc, daemon=True)
+        grpc_thread.start()
+        print("[系统] gRPC 服务已启动")
     
     def _simple_calibrate(self):
         """3秒快速校准"""

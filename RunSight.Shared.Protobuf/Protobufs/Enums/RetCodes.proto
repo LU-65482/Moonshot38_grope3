@@ -1,0 +1,8 @@
+syntax = "proto3";
+package RunSight.Shared.Protobuf.Enums;
+option csharp_namespace = "RunSight.Shared.Protobuf.Enums";
+
+enum RetCodes {
+    Success = 0;
+    Failed = 1;
+}

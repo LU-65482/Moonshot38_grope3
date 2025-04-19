@@ -1,0 +1,9 @@
+syntax = "proto3";
+package RunSight.Shared.Protobuf.Requests;
+option csharp_namespace = "RunSight.Shared.Protobuf.Requests";
+
+import "Protobuf/Models/Configure.proto";
+
+message ConfigureUpdateReq {
+    Configure Configure = 1;
+}

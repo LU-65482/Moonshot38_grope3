@@ -1,0 +1,10 @@
+syntax = "proto3";
+package RunSight.Shared.Protobuf.Service;
+option csharp_namespace = "RunSight.Shared.Protobuf.Service";
+
+import "Protobuf/Requests/ConfigureUpdateReq.proto";
+import "Protobuf/Responses/ConfigureUpdateRsp.proto";
+
+service ConfigureService {
+  rpc UpdateConfigure (ConfigureUpdateReq) returns (ConfigureUpdateRsp);
+}
