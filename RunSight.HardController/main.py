@@ -6,8 +6,11 @@ import sys
 from pinpong.board import Board, Pin
 from pinpong.extension.unihiker import accelerometer
 
-# 添加当前目录到 Python 路径
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# 添加当前目录和 grpc_gen 目录到 Python 路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(current_dir)
+sys.path.append(os.path.join(current_dir, "grpc_gen"))
+
 from grpc.configure_service import serve as serve_grpc
 
 # 初始化开发板
