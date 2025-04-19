@@ -56,7 +56,7 @@ public class DeviceConnectionService(ILogger<DeviceConnectionService> logger)
             // 创建 JsonSerializerOptions 以确保属性名称与服务器端匹配
             var options = new JsonSerializerOptions
             {
-                PropertyNamingPolicy = null // 使用原始属性名称，不进行命名转换
+                // PropertyNamingPolicy = null // 使用原始属性名称，不进行命名转换
             };
             
             // 记录请求内容

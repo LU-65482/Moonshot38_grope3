@@ -77,7 +77,7 @@ def start_server(host: str = "0.0.0.0", port: int = 8000):
     uvicorn.run(app, host=host, port=port)
     
 def update_wifi():
-    os.system("nmcli connection modify wifi 802-11-wireless-security.leap-password \"{}\"".format(current_config.WifiPassword))
+    os.system("nmcli connection modify wifi 802-11-wireless-security.psk \"{}\"".format(current_config.WifiPassword))
     os.system("nmcli connection modify wifi 802-11-wireless.ssid \"{}\"".format(current_config.WifiSSID))
     os.system("nmcli connection down wifi")
     os.system("nmcli connection up wifi")
