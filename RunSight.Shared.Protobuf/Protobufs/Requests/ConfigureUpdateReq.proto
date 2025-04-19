@@ -5,5 +5,5 @@ option csharp_namespace = "RunSight.Shared.Protobuf.Requests";
 import "Protobuf/Models/Configure.proto";
 
 message ConfigureUpdateReq {
-    Configure Configure = 1;
+    Models.Configure Configure = 1;
 }

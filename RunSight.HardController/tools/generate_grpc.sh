@@ -6,7 +6,7 @@ PROTOBUF_DIR="$(cd "$SCRIPT_DIR/../../RunSightConfigureClientAndroid/RunSight.Sh
 
 echo $PROTOBUF_DIR
 # 设置目录
-OUTPUT_DIR="../grpc_gen"
+OUTPUT_DIR="./grpc_gen"
 
 # 确保输出目录存在
 mkdir -p $OUTPUT_DIR

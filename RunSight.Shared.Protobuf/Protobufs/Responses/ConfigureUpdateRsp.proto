@@ -5,6 +5,6 @@ option csharp_namespace = "RunSight.Shared.Protobuf.Responses";
 import "Protobuf/Enums/RetCodes.proto";
 
 message ConfigureUpdateRsp {
-    RetCodes RetCode = 1;
+    Enums.RetCodes RetCode = 1;
     string Message = 2;
 }
