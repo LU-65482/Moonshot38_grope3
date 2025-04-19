@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 设置目录
-PROTOBUF_DIR="../RunSight.Shared.Protobuf/Protobufs"
+PROTOBUF_DIR="../RunSightConfigureClientAndroid/RunSight.Shared/"
 OUTPUT_DIR="../grpc_gen"
 
 # 确保输出目录存在
