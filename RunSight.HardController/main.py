@@ -2,7 +2,7 @@
 import time
 import threading
 import os
-import sys
+import sys, json
 from pinpong.board import Board, Pin
 from pinpong.extension.unihiker import accelerometer
 from unihiker import Audio 
@@ -35,6 +35,21 @@ DEBOUNCE_TIME = 2.0      # 触发冷却时间
 #DEBOUNCE_TIME1.5 ~ 3.0 值越大，误报率越低
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL")
+
+functions = [
+    {
+        "name": "start_exercise",
+        "description": "开始运动，当用户说'开始运动'时调用此工具",
+        "parameters": {
+            "type": "object"
+        },
+        "name": "end_exercise",
+        "description": "结束运动，当用户说'结束运动'时调用此工具",
+        "parameters": {
+            "type": "object"
+        }
+    }
+]
 
 class SafetySystem:
     def __init__(self):
@@ -166,8 +181,19 @@ class SafetySystem:
                 messages=[
                     {"role": "system", "content": "你是一个中文客服助理，你的回答应该像聊天一样简短。"},
                     {"role": "user", "content": resultInput}
-                ]
+                ],
+                functions=functions,
+                function_call="auto"
             )
+            message = res.choices[0].message
+            if message.get("function_call"):
+                func_name = message["function_call"]["name"]
+                func_args = json.loads(message["function_call"]["arguments"])
+                if func_name == "start_exercise":
+                    print("开始运动")
+                elif func_name == "end_exercise":
+                    print("结束运动")
+                return
             rsp = res.choices[0].message.content
             print(rsp)
 
