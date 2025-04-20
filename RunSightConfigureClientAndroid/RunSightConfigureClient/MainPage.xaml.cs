@@ -32,7 +32,7 @@ public partial class MainPage : ContentPage
         }
         catch (Exception exception)
         {
-            await DisplayAlert("错误", $"保存配置时发生错误: {exception.Message}", "确定");
+            await DisplayAlert("错误", $"保存配置时发生错误：{exception.Message}", "确定");
         }
     }
 }

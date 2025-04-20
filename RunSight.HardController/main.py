@@ -7,6 +7,7 @@ import uvicorn
 from typing import Optional
 import os
 import sys, json
+from datetime import datetime
 from pinpong.board import Board, Pin
 from pinpong.extension.unihiker import accelerometer
 from unihiker import Audio 
@@ -211,6 +212,7 @@ class SafetySystem:
                     print("开始运动")
                 elif func_name == "end_exercise":
                     print("结束运动")
+                    self._upload_data()
             rsp = res.choices[0].message.content
             print(rsp)
 
@@ -263,16 +265,15 @@ class SafetySystem:
         """上传数据"""
         print("[上传] 正在上传数据...")
         data = {
-            "id": 0,
             "userId": current_config.UID or 1,  # 使用配置的 UID，如果为空则使用默认值 1
-            "runDate": "2025-04-20T03:05:20.131Z",
-            "distance": 0,
-            "averagePace": 0,
-            "averageHeartRate": 0,
+            "runDate": datetime.now().isoformat(),
+            "distance": 7.5,
+            "averagePace": 10,
+            "averageHeartRate": 70,
             "routeMap": "string",
             "notes": "string",
             "isPublic": True,
-            "createdAt": "2025-04-20T03:05:20.131Z"
+            "createdAt": datetime.now().isoformat()
         }
         url = "http://10.1.2.101:5238/api/RunningData"
         response = requests.post(url, json=data)
