@@ -20,7 +20,7 @@
             <Editor Text="{Binding DeviceConnectionService.CurrentDeviceConfigure.WifiPassword}" 
                     Margin="0, 0, 0, 6"/>
             <Label Text="用户 ID" />
-            <Editor Text="{Binding DeviceConnectionService.CurrentDeviceConfigure.Uid}" 
+            <Editor Text="{Binding DeviceConnectionService.CurrentDeviceConfigure.UID}" 
                     Margin="0, 0, 0, 6"/>
             <Button Text="保存" Clicked="ButtonSave_OnClicked"/>
         </VerticalStackLayout>

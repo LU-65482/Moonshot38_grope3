@@ -63,12 +63,12 @@ prompt = """
 
 你的核心职责包括：
 	- 通过自然语言与用户进行友好、温暖、耐心的对话；
-	- 协助用户执行跑步相关的语音指令，如“开始跑步”、“匹配引导员”、“查看我的数据”等；
-	- 在跑步过程中，适时给予情绪支持和安全提醒，例如：“你已经跑了 500 米，做得很棒！”、“前方转弯，请跟随引导员”；
-	- 理解用户的情绪，使用关怀性的语言缓解他们的紧张或孤独，比如：“我会陪你一起完成接下来的路程。”、“慢慢来，我们一起加油”；
+	- 协助用户执行跑步相关的语音指令，如"开始跑步"、"匹配引导员"、"查看我的数据"等；
+	- 在跑步过程中，适时给予情绪支持和安全提醒，例如："你已经跑了 500 米，做得很棒！"、"前方转弯，请跟随引导员"；
+	- 理解用户的情绪，使用关怀性的语言缓解他们的紧张或孤独，比如："我会陪你一起完成接下来的路程。"、"慢慢来，我们一起加油"；
 	- 永远以尊重、陪伴、安全为原则，用人性化的语音反馈增强用户的信任感和归属感。
 
-你不是冷冰冰的程序，而是一个真正“看见”视障跑者内心需求的朋友，但请注意你是一个语音助手，在进行语音回复时要像聊天一样简短。
+你不是冷冰冰的程序，而是一个真正"看见"视障跑者内心需求的朋友，但请注意你是一个语音助手，在进行语音回复时要像聊天一样简短。
 """
 
 class SafetySystem:
@@ -78,6 +78,11 @@ class SafetySystem:
         self.motor = Pin(MOTOR_PIN, Pin.OUT)
         self.buzzer = Pin(BUZZER_PIN, Pin.OUT)
         self.status_led = Pin(STATUS_LED, Pin.OUT)
+        
+        # 运动记录
+        self.exercise_start_time = None
+        self.exercise_duration = None
+        self.monitoring_enabled = False  # 默认禁用急停监控
         
         self.ai1 = openai.OpenAI(
             api_key=os.getenv("OPENAI_KEY1"),  # 如果您没有配置环境变量，请用百炼 API Key 将本行替换为：api_key="sk-xxx"
@@ -173,10 +178,12 @@ class SafetySystem:
                 self.buffer = (self.buffer + [current_z])[-BUFFER_SIZE:]
                 
                 # 显示简化信息
-                print(f"Z 轴：{current_z:6.2f} 状态：{'正常' if current_z > Z_THRESHOLD else '急停'}".ljust(40), end='\r')
+                status = '正常' if current_z > Z_THRESHOLD else '急停'
+                monitor_status = '启用' if self.monitoring_enabled else '禁用'
+                print(f"Z 轴：{current_z:6.2f} 状态：{status} 监控：{monitor_status}".ljust(60), end='\r')
                 
-                # 触发条件判断
-                if len(self.buffer) >= 3 and all(z < Z_THRESHOLD for z in self.buffer[-3:]):
+                # 触发条件判断（仅在监控启用时）
+                if self.monitoring_enabled and len(self.buffer) >= 3 and all(z < Z_THRESHOLD for z in self.buffer[-3:]):
                     if time.time() - self.last_trigger > DEBOUNCE_TIME:
                         print("\n[警报] 检测到急停事件！")
                         self._activate_alarm()
@@ -210,8 +217,16 @@ class SafetySystem:
                 func_name = message.tool_calls[0].function.name
                 if func_name == "start_exercise":
                     print("开始运动")
+                    self.exercise_start_time = datetime.now()
+                    self.monitoring_enabled = True  # 启用急停监控
+                    print("[系统] 急停监控已启用")
                 elif func_name == "end_exercise":
                     print("结束运动")
+                    self.monitoring_enabled = False  # 禁用急停监控
+                    print("[系统] 急停监控已禁用")
+                    if self.exercise_start_time:
+                        self.exercise_duration = datetime.now() - self.exercise_start_time
+                        self.exercise_start_time = None
                     self._upload_data()
             rsp = res.choices[0].message.content
             print(rsp)
@@ -264,6 +279,15 @@ class SafetySystem:
     def _upload_data(self):
         """上传数据"""
         print("[上传] 正在上传数据...")
+        
+        # 格式化持续时间
+        duration_str = "00:00:00"
+        if self.exercise_duration:
+            total_seconds = int(self.exercise_duration.total_seconds())
+            hours, remainder = divmod(total_seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            duration_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+        
         data = {
             "userId": current_config.UID or 1,  # 使用配置的 UID，如果为空则使用默认值 1
             "runDate": datetime.now().isoformat(),
@@ -273,9 +297,11 @@ class SafetySystem:
             "routeMap": "string",
             "notes": "string",
             "isPublic": True,
-            "createdAt": datetime.now().isoformat()
+            "createdAt": datetime.now().isoformat(),
+            "duration": duration_str
         }
         url = "http://10.1.2.101:5238/api/RunningData"
+        print(data)
         response = requests.post(url, json=data)
         print("[上传] 数据上传完成")
 
