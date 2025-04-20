@@ -38,15 +38,23 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL")
 
 functions = [
     {
-        "name": "start_exercise",
-        "description": "开始运动，当用户说'开始运动'时调用此工具",
-        "parameters": {
-            "type": "object"
-        },
-        "name": "end_exercise",
-        "description": "结束运动，当用户说'结束运动'时调用此工具",
-        "parameters": {
-            "type": "object"
+        'type': 'function',
+        'function': {
+             "name": "start_exercise",
+            "description": "开始运动，当用户说'开始运动'时调用此工具",
+            "parameters": {
+                "type": "object"
+            }
+        }
+    },
+    {
+        'type': 'function',
+        'function': {
+            "name": "end_exercise",
+            "description": "结束运动，当用户说'结束运动'时调用此工具",
+            "parameters": {
+                "type": "object"
+            }
         }
     }
 ]
@@ -182,13 +190,12 @@ class SafetySystem:
                     {"role": "system", "content": "你是一个中文客服助理，你的回答应该像聊天一样简短。"},
                     {"role": "user", "content": resultInput}
                 ],
-                functions=functions,
-                function_call="auto"
+                tools=functions,
+                tool_choice="auto"
             )
             message = res.choices[0].message
-            if message.function_call is not None:
-                func_name = message.function_call.name
-                func_args = json.loads(message.function_call.arguments)
+            if len(message.tool_calls) >= 1:
+                func_name = message.tool_calls[0].function.name
                 if func_name == "start_exercise":
                     print("开始运动")
                 elif func_name == "end_exercise":
