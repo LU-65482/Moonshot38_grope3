@@ -200,7 +200,6 @@ class SafetySystem:
                     print("开始运动")
                 elif func_name == "end_exercise":
                     print("结束运动")
-                return
             rsp = res.choices[0].message.content
             print(rsp)
 
