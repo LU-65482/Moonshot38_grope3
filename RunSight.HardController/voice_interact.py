@@ -59,7 +59,7 @@ def work():
                 silent_count += 1
             else:
                 silent_count = 0
-            if silent_count > silence_frames:
+            if silent_count > silence_frames or len(recording) > 1000:
                 print("检测到静默，结束录音。")
                 in_speech = False
                 if len(recording) <= 100:
