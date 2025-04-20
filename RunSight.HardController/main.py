@@ -186,9 +186,9 @@ class SafetySystem:
                 function_call="auto"
             )
             message = res.choices[0].message
-            if message.get("function_call"):
-                func_name = message["function_call"]["name"]
-                func_args = json.loads(message["function_call"]["arguments"])
+            if message.get.function_call is not None:
+                func_name = message.function_call.name
+                func_args = json.loads(message.function_call.arguments)
                 if func_name == "start_exercise":
                     print("开始运动")
                 elif func_name == "end_exercise":
