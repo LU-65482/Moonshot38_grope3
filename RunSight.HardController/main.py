@@ -151,24 +151,28 @@ class SafetySystem:
             self._shutdown()
             
     def on_speech_captured(self, filename: str): 
-        with open(filename, "rb") as f:
-            resultInput = self.ai1.audio.transcriptions.create(
-                model="Systran/faster-whisper-large-v3",
-                file=f,
-                response_format="text",
-                language="zh"
+        try:
+            with open(filename, "rb") as f:
+                resultInput = self.ai1.audio.transcriptions.create(
+                    model="Systran/faster-whisper-large-v3",
+                    file=f,
+                    response_format="text",
+                    language="zh"
+                )
+            print('whisper>', resultInput)
+            res = self.ai2.chat.completions.create(
+                model=OPENAI_MODEL,
+                messages=[
+                    {"role": "system", "content": "你是一个中文客服助理。"},
+                    {"role": "user", "content": resultInput}
+                ]
             )
-        print('whisper>', resultInput)
-        res = self.ai2.chat.completions.create(
-            model=OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": "你是一个中文客服助理。"},
-                {"role": "user", "content": resultInput}
-            ]
-        )
-        rsp = res["choices"][0]["message"]["content"]
-        print(rsp)
-        os.remove(filename)
+            rsp = res.choices[0].message.content
+            print(rsp)
+        except Exception as e:
+            print(f"[错误] 语音识别失败：{str(e)}")
+        finally:
+            os.remove(filename)
     
     def _shutdown(self):
         """安全关闭系统"""
