@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 import time
 import threading
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import uvicorn
+from typing import Optional
 import os
 import sys, json
 from pinpong.board import Board, Pin
@@ -8,13 +12,7 @@ from pinpong.extension.unihiker import accelerometer
 from unihiker import Audio 
 import openai
 import requests
-
-
-# 添加当前目录到 Python 路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_dir)
-
-from web import start_server
+from web import start_server, current_config
 import voice_interact
 
 # 初始化开发板
@@ -260,6 +258,25 @@ class SafetySystem:
         self.buzzer.write_digital(0)
         self.status_led.write_digital(0)
         print("\n[系统] 安全关闭完成")
+        
+    def _upload_data(self):
+        """上传数据"""
+        print("[上传] 正在上传数据...")
+        data = {
+            "id": 0,
+            "userId": current_config.UID or 1,  # 使用配置的 UID，如果为空则使用默认值 1
+            "runDate": "2025-04-20T03:05:20.131Z",
+            "distance": 0,
+            "averagePace": 0,
+            "averageHeartRate": 0,
+            "routeMap": "string",
+            "notes": "string",
+            "isPublic": True,
+            "createdAt": "2025-04-20T03:05:20.131Z"
+        }
+        url = "http://10.1.2.101:5238/api/RunningData"
+        response = requests.post(url, json=data)
+        print("[上传] 数据上传完成")
 
 if __name__ == "__main__":
     system = SafetySystem()

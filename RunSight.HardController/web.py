@@ -13,6 +13,7 @@ class Configure(BaseModel):
     SpeedThreshold: Optional[float]
     WifiSSID: Optional[str] = None
     WifiPassword: Optional[str] = None
+    UID: Optional[int] = None
 
 # 响应模型
 class Response(BaseModel):
@@ -26,7 +27,8 @@ app = FastAPI(title="RunSight 硬件控制器 API")
 current_config = Configure(
     SpeedThreshold=-5.5,
     WifiSSID="",
-    WifiPassword=""
+    WifiPassword="",
+    UID=0
 )
 
 @app.get("/configure", response_model=Configure)
@@ -39,13 +41,13 @@ async def update_configure(configure: Configure):
     """更新配置"""
     try:
         # 记录接收到的配置
-        print(f"[API] 接收到配置更新请求: {configure}")
+        print(f"[API] 接收到配置更新请求：{configure}")
         
         # 验证配置
         if configure.SpeedThreshold is not None and not isinstance(configure.SpeedThreshold, (int, float)):
             return Response(
                 RetCode=1,
-                Message=f"SpeedThreshold 必须是数字类型，收到: {type(configure.SpeedThreshold)}"
+                Message=f"SpeedThreshold 必须是数字类型，收到：{type(configure.SpeedThreshold)}"
             )
         
         # 更新配置
@@ -62,7 +64,7 @@ async def update_configure(configure: Configure):
         )
     except Exception as e:
         # 记录详细错误信息
-        print(f"[API] 配置更新失败: {str(e)}")
+        print(f"[API] 配置更新失败：{str(e)}")
         import traceback
         print(traceback.format_exc())
         

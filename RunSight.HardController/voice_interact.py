@@ -66,13 +66,15 @@ def work():
                     print("录音太短，忽略")
                     return
                 tmp_file = "/tmp/" + str(uuid.uuid4())
+                stream.stop()
                 write_file(tmp_file, recording)
                 speech_captured(tmp_file)
+                stream.start()
     # 启动流
     with sd.InputStream(channels=1,
                         samplerate=SAMPLE_RATE,
                         blocksize=FRAME_SIZE,
                         dtype='float32',
-                        callback=callback):
+                        callback=callback) as stream:
         while True:
             ...
