@@ -28,7 +28,7 @@ def work():
     recording = []
     silent_count = 0
     threshold_frames=5
-    silence_frames=10
+    silence_frames=15
     buffer = collections.deque(maxlen=threshold_frames)
     in_speech = False
     def callback(indata, frames, time_info, status):
@@ -62,6 +62,9 @@ def work():
             if silent_count > silence_frames:
                 print("检测到静默，结束录音。")
                 in_speech = False
+                if len(recording) <= 100:
+                    print("录音太短，忽略")
+                    return
                 tmp_file = "/tmp/" + str(uuid.uuid4())
                 write_file(tmp_file, recording)
                 speech_captured(tmp_file)
