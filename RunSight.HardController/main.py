@@ -7,6 +7,7 @@ from pinpong.board import Board, Pin
 from pinpong.extension.unihiker import accelerometer
 from unihiker import Audio 
 import openai
+import requests
 
 
 # 添加当前目录到 Python 路径
@@ -163,12 +164,46 @@ class SafetySystem:
             res = self.ai2.chat.completions.create(
                 model=OPENAI_MODEL,
                 messages=[
-                    {"role": "system", "content": "你是一个中文客服助理。"},
+                    {"role": "system", "content": "你是一个中文客服助理，你的回答应该像聊天一样简短。"},
                     {"role": "user", "content": resultInput}
                 ]
             )
             rsp = res.choices[0].message.content
             print(rsp)
+
+            # 定义 API 的 URL 和端口
+            url = "http://10.1.2.101:9880/tts"
+
+            # 构造请求数据
+            data = {
+                "text": rsp,
+                "text_lang": "zh",  # 文本语言
+                "ref_audio_path": "【普通】为曾经拥有过某种幸福而开心，为未来依旧会出现奇迹而期待。.wav",  # 参考音频路径
+                "prompt_lang": "zh",  # 提示文本语言
+                "prompt_text": "为曾经拥有过某种幸福而开心，为未来依旧会出现奇迹而期待。",
+                "top_k": 5,
+                "top_p": 1.0,
+                "temperature": 1.0,
+                "batch_size": 1,
+                "media_type": "wav",  # 返回的音频格式
+                "streaming_mode": False,  # 是否启用流式传输
+                "text_split_method": "cut3",
+            }
+
+            # 发送 POST 请求
+            response = requests.post(url, json=data)
+
+            # 检查返回状态并处理响应
+            if response.status_code == 200:
+                # 保存返回的音频流
+                with open("/tmp/output.wav", "wb") as f:
+                    f.write(response.content)
+                print("生成的语音已保存为 /tmp/output.wav")
+                self.audio.play("/tmp/output.wav")
+            else:
+                # 输出错误信息
+                print(f"请求失败：{response.status_code}")
+                print(response.json())
         except Exception as e:
             print(f"[错误] 语音识别失败：{str(e)}")
         finally:
