@@ -44,7 +44,7 @@ class SafetySystem:
         self.status_led = Pin(STATUS_LED, Pin.OUT)
         
         self.ai1 = openai.OpenAI(
-            api_key=os.getenv("OPENAI_KEY1"),  # 如果您没有配置环境变量，请用百炼 API Key 将本行替换为：api_key="sk-xxx"
+            # api_key=os.getenv("OPENAI_KEY1"),  # 如果您没有配置环境变量，请用百炼 API Key 将本行替换为：api_key="sk-xxx"
             base_url=os.getenv("OPENAI_BASEURL1"),  # 填写 DashScope SDK 的 base_url
         )
         self.ai2 = openai.OpenAI(
@@ -158,7 +158,7 @@ class SafetySystem:
                 response_format="text",
                 language="zh"
             )
-        print('>', resultInput)
+        print('whisper>', resultInput)
         res = self.ai2.chat.completions.create(
             model=OPENAI_MODEL,
             messages=[
