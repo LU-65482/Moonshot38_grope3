@@ -10,7 +10,7 @@ FRAME_DURATION_MS = 30           # 帧长（ms），只能是 10, 20, 30
 FRAME_SIZE = int(SAMPLE_RATE * FRAME_DURATION_MS / 1000)  # 样本数
 BYTES_PER_FRAME = FRAME_SIZE * 2  # 16 位 PCM，每个样本 2 字节
 
-vad = webrtcvad.Vad(2)  # 攻击性模式 0~3
+vad = webrtcvad.Vad(3)  # 攻击性模式 0~3，值越大越严格
 
 def speech_captured(filename): ...
 
@@ -27,8 +27,8 @@ def write_file(filename, recording):
 def work():
     recording = []
     silent_count = 0
-    threshold_frames=5
-    silence_frames=15
+    threshold_frames=8  # 增加判断人声的帧数阈值
+    silence_frames=20   # 增加判断静默的帧数阈值
     buffer = collections.deque(maxlen=threshold_frames)
     in_speech = False
     def callback(indata, frames, time_info, status):
