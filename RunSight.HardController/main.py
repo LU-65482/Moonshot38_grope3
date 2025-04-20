@@ -152,8 +152,8 @@ class SafetySystem:
             
     def on_speech_captured(self, filename: str): 
         with open(filename, "rb") as f:
-            resultInput = self.ai1.audio.transcribe(
-                model=OPENAI_MODEL,
+            resultInput = self.ai1.audio.transcriptions.create(
+                model="Systran/faster-whisper-large-v3",
                 file=f,
                 response_format="text",
                 language="zh"
