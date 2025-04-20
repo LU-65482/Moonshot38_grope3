@@ -194,7 +194,7 @@ class SafetySystem:
                 tool_choice="auto"
             )
             message = res.choices[0].message
-            if len(message.tool_calls) >= 1:
+            if message.tool_calls is not None and len(message.tool_calls) >= 1:
                 func_name = message.tool_calls[0].function.name
                 if func_name == "start_exercise":
                     print("开始运动")
