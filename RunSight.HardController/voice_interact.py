@@ -15,10 +15,13 @@ vad = webrtcvad.Vad(2)  # 攻击性模式 0~3
 def speech_captured(filename): ...
 
 def write_file(filename, recording):
+    print(f"写入文件：{filename}")
+    # 将字节数据合并
     wav_data = b"".join(recording)
-    write(filename, SAMPLE_RATE, 
-          # 将 bytes 转回 numpy 数组（示意）
-          memoryview(wav_data).cast('h'))  
+    # 转换为 numpy 数组
+    audio_array = np.frombuffer(wav_data, dtype=np.int16)
+    # 写入 WAV 文件
+    write(filename, SAMPLE_RATE, audio_array)
     return filename
 
 def work():
